@@ -1,0 +1,86 @@
+---
+title: "Series Temporais"
+output: html_notebook
+---
+https://github.com/jluisjuncal/TSstudio
+
+
+```{r}
+install.packages("Boom")
+install.packages("BoomSpikeSlab")
+install.packages("TSstudio")
+ # Install the MLstudio
+devtools::install_github("RamiKrispin/MLstudio")                                                                              # install.packages("devtools")
+
+#devtools::install_github("RamiKrispin/TSstudio")
+```
+
+
+
+```{r}
+library(MLstudio)
+
+MLstudio::runML()
+
+```
+
+```{r}
+
+library(TSstudio)
+data(USgas)
+
+# Ploting time series object
+ts_plot(USgas)
+
+# Seasonal plot
+ts_seasonal(USgas, type = "all")
+
+# Lags plot
+ts_lags(USgas, lags = 1:12)
+
+# Seasonal lags plot
+ts_lags(USgas, lags = c(12, 24, 36, 48))
+
+# Heatmap plot
+ts_heatmap(USgas)
+
+# Forecasting applications
+# Setting training and testing partitions
+USgas_s <- ts_split(ts.obj = USgas, sample.out = 12)
+train <- USgas_s$train
+test <- USgas_s$test
+
+# Forecasting with auto.arima
+library(forecast)
+md <- auto.arima(train)
+fc <- forecast(md, h = 12)
+
+# Plotting actual vs. fitted and forecasted
+test_forecast(actual = USgas, forecast.obj = fc, test = test)
+
+# Plotting the forecast 
+plot_forecast(fc)
+
+# Forecasting with backtesting 
+USgas_backtesting <- ts_backtesting(USgas, 
+                                    models = "abehntw", 
+                                    periods = 6, 
+                                    error = "RMSE", 
+                                    window_size = 12, 
+                                    h = 12)
+View(USgas_backtesting)
+hw_grid <- ts_grid(USgas, 
+                   model = "HoltWinters",
+                   periods = 6,
+                   window_space = 6,
+                   window_test = 12,
+                   hyper_params = list(alpha = seq(0,1,0.1),
+                                       beta = seq(0,1,0.1),
+                                       gamma = seq(0,1,0.1)))
+                                       
+plot_grid(hw_grid, type = "3D")
+
+
+
+```
+

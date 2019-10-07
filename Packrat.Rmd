@@ -1,0 +1,32 @@
+---
+title: "Packrat"
+output: html_notebook
+---
+
+https://beta.rstudioconnect.com/content/2715/Up-to-Bat-with-Packrat.html
+
+```{r}
+library(packrat)
+library(dplyr)
+```
+
+## Ordes básicas
+
+```{r}
+packrat::init() # Inicializa o seguimento de paquetes por parte de Packrat
+
+packrat::snapshot() # Crea unha "fotografía" do estado actual dos paquetes
+packrat::restore() # Restaura o estado do último snapshot gardado
+
+packrat::bundle() # Garda un paquete das librerías do proxecto
+packrat::unbundle() # Abre o paquete creado por bundle
+
+packrat::status() # Consulta do estado do proxecto
+packrat::clean() # Limpar os paquetes que non están en uso
+
+packrat::on()
+packrat::off()
+
+
+```
+

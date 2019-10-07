@@ -1,0 +1,65 @@
+---
+title: "Workflow"
+output: html_notebook
+#runtime: shiny  
+---
+## Rocker
+https://www.rocker-project.org/images/
+
+https://github.com/rocker-org/rocker-versioned/blob/master/VERSIONS.md
+
+Vou a usar éste
+
+
+https://ropenscilabs.github.io/r-docker-tutorial/ 
+
+Según a web de rocker (https://github.com/rocker-org/rocker-versioned) é 
+mellor instalar os paquetes necesarios no Dockerfile con install2R.R
+
+
+https://colinfay.me/docker-r-reproducibility/
+
+## Docker
+Para ter versions máis funcionais que os snaps de ubuntu,
+que non me funcionan ben
+https://docs.docker.com/install/linux/docker-ce/ubuntu/
+
+sudo docker build -t <nome_da_miña_imaxe> .
+
+
+```{r}
+system(command =" sudo docker build -t my-r-image .")
+
+system(command ="sudo docker run --rm -p 8787:8787 -v /media/datos1/R/projects:/home/rstudio -e PASSWORD=pataca rocker/rstudio:3.5.3")
+
+# system(command = "sudo docker run --rm -p 8787:8787 -v /media/datos1/R/projects:/home/rstudio/r-docker-tutorial rocker/verse")
+#container name mírase con
+system(command = "sudo docker ps")
+
+# a ip do contedor
+system(command="sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' container_name_or_id")
+```
+
+Unha vez arrancada podemos actualizar e instalar paquetes 
+```
+$docker ps # find the ID of the running container you want to add a package to
+$docker commit -m "verse + gapminder" <container id> verse_gapminder
+$
+```
+
+## Installing Dependencies external to the R system
+Many R packages have dependencies external to R, for example GSL, GDAL, JAGS and so on. To install these on a running rocker container you need to go to the docker command line (in a new terminal window) and type the following:
+
+```
+$docker ps # find the ID of the running container you want to add a package to
+$docker exec -it <container-id> bash # a docker command to start a bash shell in your container
+$apt-get install libgsl0-dev # funciona, pero non ten autocompletado
+$docker commit -m "verse + gapminder + GSL" <container id>  verse_gapminder_gsl
+```
+
+## Gardar en local
+
+```
+$docker save verse_gapminder > verse_gapminder.tar
+$docker load --input verse_gapminder.tar
+```
