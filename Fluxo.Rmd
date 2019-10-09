@@ -1,8 +1,11 @@
 ---
 title: "Fluxo de Traballo"
 output: html_notebook
-#runtime: shiny  
+
 ---
+
+
+
 ## Rocker
 https://www.rocker-project.org/images/
 

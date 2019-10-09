@@ -3,10 +3,15 @@ title: "Drake"
 output: html_notebook
 ---
 
+Baseado en 
+
+https://ropenscilabs.github.io/drake-manual/index.html
+
+
 
 ## Carga de librerías
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, error=FALSE}
 library(drake)
 library(dplyr)
 library(ggplot2)
@@ -16,51 +21,35 @@ library(ggplot2)
 ## Funcións de traballo
 
 ```{r}
-grafica <- function(data) {
-  ggplot(data, aes(x = Petal.Width, fill = Species)) +
+grafica <- function(datos) {
+  ggplot(datos, aes(x = Petal.Width, fill = Species)) +
     geom_histogram()
 }
 ```
 
 
-## Funcións
-
-```{r}
-mi_plan<-drake_plan(hist=grafica())
-plan
-
-```
-
-
-
-
-
 ## Creación do plan
+
 ```{r}
 
-plan <- drake_plan(
+meu_plan <- drake_plan(
  
   data = iris %>%
     mutate(Species = forcats::fct_inorder(Species)),
   hist = grafica(data),
-  fit = lm(Sepal.Width ~ Petal.Width + Species, data)#,
-  # report = rmarkdown::render(
-  #   knitr_in("Fluxo.Rmd"),
-  #   output_file = file_out("Fluxo.html"),
-  #   quiet = TRUE
-  #)
+  fit = lm(Sepal.Width ~ Petal.Width + Species, data)
 )
-plan
+meu_plan # só é para visualizalo plan de traballo, non fai nada
 ```
 
 
 ## Lanzamento do plan
 
 ```{r}
-make(plan)
+make(meu_plan) # executa o plan de traballo e crea os "targets"
 
-config <- drake_config(plan)
-vis_drake_graph(config) # Interactive graph: zoom, drag, etc.
+config <- drake_config(meu_plan) # non é necesario, é para ver o funcionamento interno de plan
+vis_drake_graph(config) # gráfico do plan
 
 ```
 
@@ -68,9 +57,9 @@ vis_drake_graph(config) # Interactive graph: zoom, drag, etc.
 
 ## Lectura e recuperación de "targets"
 
-```{r}
+```{r, echo= TRUE}
 readd(data) # Leer un "target"
-readd(hist)
+g<-readd(hist)
 loadd(hist)
 loadd() ## Carga tódolos targets 
 ```
@@ -80,16 +69,22 @@ loadd() ## Carga tódolos targets
 ## Modificación da función
 
 ```{r}
-grafica <- function(data) {
-  ggplot(data, aes(x = Petal.Width, fill = Species)) +
-    geom_histogram(binwidth = 0.25) +
+grafica <- function(datos) {
+  ggplot(datos, aes(x = Petal.Width, fill = Species)) +
+    geom_histogram(binwidth = 30) +
     theme_gray(20)
 }
 ```
 
 
 ```{r}
-config <- drake_config(plan)
+config <- drake_config(meu_plan)
+vis_drake_graph(config) # Visualizalos cambios
+
+make(meu_plan) # recreo o plan, xa que está desactualizado
+
+config <- drake_config(meu_plan)
 vis_drake_graph(config) # Visualizalos cambios
 ```
-
+## Escalabilidade
+Por información, drake ten ferramentas para lanzar traballos de computación avanzada (HPC)

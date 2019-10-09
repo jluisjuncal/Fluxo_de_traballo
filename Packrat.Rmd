@@ -5,6 +5,21 @@ output: html_notebook
 
 https://beta.rstudioconnect.com/content/2715/Up-to-Bat-with-Packrat.html
 
+
+## Packrat
+
+### Ventaxas
+
+- Seguimento das librerías e versións  utilizadas nun proxecto 
+- Compartir con outros usuarios as librerías utilizadas no proxecto
+
+### Desvantaxas
+
+- É moi lento, as ordes init() e snapshot() poden levar minutos
+- Ocupa espacio por cada proxecto, centos de megas
+- Pode dar inconsistencias coas librerías xerais,
+
+
 ```{r}
 library(packrat)
 library(dplyr)
@@ -27,6 +42,6 @@ packrat::clean() # Limpar os paquetes que non están en uso
 packrat::on()
 packrat::off()
 
-
+packrat::disable() # Deshabilita packrat, as librerías a utilizar serían as xenéricas e bórranse as locais
 ```
 
