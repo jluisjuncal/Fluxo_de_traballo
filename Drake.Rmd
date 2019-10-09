@@ -4,7 +4,7 @@ output: html_notebook
 ---
 
 
-Carga de librerías
+## Carga de librerías
 
 ```{r, echo=FALSE}
 library(drake)
@@ -12,46 +12,37 @@ library(dplyr)
 library(ggplot2)
 ```
 
-Funcións
+
+## Funcións de traballo
 
 ```{r}
-mi_plan<-drake_plan(hist=create_plot())
-plan
-config(plan)
-```
-
-Funcións de traballo
-
-```{r}
-create_plot <- function(data) {
+grafica <- function(data) {
   ggplot(data, aes(x = Petal.Width, fill = Species)) +
     geom_histogram()
 }
 ```
 
-load your custom functions,
 
+## Funcións
 
-
-check any supporting files (optional),
-Ficheiros
 ```{r}
-# Get the files with drake_example("main").
-file.exists("raw_data.xlsx")
-
-file.exists("report.Rmd")
+mi_plan<-drake_plan(hist=grafica())
+plan
 
 ```
 
 
-Creación do plan
+
+
+
+## Creación do plan
 ```{r}
 
 plan <- drake_plan(
  
   data = iris %>%
     mutate(Species = forcats::fct_inorder(Species)),
-  hist = create_plot(data),
+  hist = grafica(data),
   fit = lm(Sepal.Width ~ Petal.Width + Species, data)#,
   # report = rmarkdown::render(
   #   knitr_in("Fluxo.Rmd"),
@@ -63,49 +54,33 @@ plan
 ```
 
 
-Lanzamento do plan
+## Lanzamento do plan
 
 ```{r}
 make(plan)
+
+config <- drake_config(plan)
+vis_drake_graph(config) # Interactive graph: zoom, drag, etc.
+
 ```
 
 
 
-Except for files like report.html, your output is stored in a hidden .drake/ folder. Reading it back is easy.
+## Lectura e recuperación de "targets"
+
 ```{r}
-readd(data) # See also loadd().
+readd(data) # Leer un "target"
 readd(hist)
+loadd(hist)
+loadd() ## Carga tódolos targets 
 ```
 
 
-#> # A tibble: 150 x 5
-#>    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
-#>           <dbl>       <dbl>        <dbl>       <dbl> <fct>  
-#>  1          5.1         3.5          1.4         0.2 setosa 
-#>  2          4.9         3            1.4         0.2 setosa 
-#>  3          4.7         3.2          1.3         0.2 setosa 
-#>  4          4.6         3.1          1.5         0.2 setosa 
-#>  5          5           3.6          1.4         0.2 setosa 
-#>  6          5.4         3.9          1.7         0.4 setosa 
-#>  7          4.6         3.4          1.4         0.3 setosa 
-#>  8          5           3.4          1.5         0.2 setosa 
-#>  9          4.4         2.9          1.4         0.2 setosa 
-#> 10          4.9         3.1          1.5         0.1 setosa 
-#> # … with 140 more rows
 
-
-
-You may look back on your work and see room for improvement, but it's all good! The whole point of drake is to help you go back and change things quickly and painlessly. For example, we forgot to give our histogram a bin width.
-
-
-#> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-
-So let's fix the plotting function.
-
-Modificación da función
+## Modificación da función
 
 ```{r}
-create_plot <- function(data) {
+grafica <- function(data) {
   ggplot(data, aes(x = Petal.Width, fill = Species)) +
     geom_histogram(binwidth = 0.25) +
     theme_gray(20)
@@ -115,6 +90,6 @@ create_plot <- function(data) {
 
 ```{r}
 config <- drake_config(plan)
-vis_drake_graph(config) # Interactive graph: zoom, drag, etc.
+vis_drake_graph(config) # Visualizalos cambios
 ```
 
