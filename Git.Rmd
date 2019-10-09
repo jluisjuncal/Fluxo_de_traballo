@@ -23,6 +23,10 @@ Xestión dos cambios no código
 
 ![](Imaxes/git_fogo.png)
 
+## Repositorios
+
+- Github.com -> É o máis extendido, ten limitadas as contas privadas
+- Bitbucket -> Pódese ter contas privadas
 
 ## Creación dun repositorio
 
@@ -37,7 +41,7 @@ Xestión dos cambios no código
  git commit -m "first commit"
  git remote add origin https://github.com/jluisjuncal/Fluxo_de_traballo.git
  git push -u origin master
- git pull -u 
+ 
 ```
 ![](Imaxes/git_fluxo.png)
 Diferencias Stagge/Commit
