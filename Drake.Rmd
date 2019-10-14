@@ -7,7 +7,8 @@ Baseado en
 
 https://ropenscilabs.github.io/drake-manual/index.html
 
-
+Un uso moi útil é nos informes en markdown, xa que cando se ten que refacer obriga a executalos
+análises de novo. Ten un sistema de caché, pero só é útil no computador local.
 
 ## Carga de librerías
 
@@ -57,7 +58,7 @@ vis_drake_graph(config) # gráfico do plan
 
 ## Lectura e recuperación de "targets"
 
-```{r, echo= TRUE}
+```{r}
 readd(data) # Leer un "target"
 g<-readd(hist)
 loadd(hist)
